@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -14,9 +15,10 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "author")
+@Table(name = "authors")
 public class Author implements Serializable {
     @Id
+    @OneToMany(mappedBy = "author")
     private String login;
     private String password;
     private LocalDate signupDate;
