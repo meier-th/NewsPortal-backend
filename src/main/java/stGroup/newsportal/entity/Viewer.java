@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.LinkedList;
 
@@ -13,7 +14,7 @@ import java.util.LinkedList;
 @NoArgsConstructor
 @Entity
 @Table(name = "viewer")
-public class Viewer {
+public class Viewer implements Serializable {
 
     private String login;
     private String password;

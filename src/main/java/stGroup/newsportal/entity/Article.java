@@ -5,14 +5,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "articles")
-public class Article {
+public class Article implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,5 +27,10 @@ public class Article {
     @ManyToOne
     @JoinColumn(name = "theme")
     private Theme theme;
+    @OneToMany(mappedBy = "article")
+    private ArrayList<Comment> comments;
+    private int views;
+    private int upVotes;
+    private int downVotes;
 
 }
