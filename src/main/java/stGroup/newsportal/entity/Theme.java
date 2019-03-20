@@ -18,4 +18,6 @@ public class Theme implements Serializable {
     private String name;
     @OneToMany(mappedBy = "theme", fetch = FetchType.LAZY)
     private List<Article> articles;
+    @ManyToMany(mappedBy = "themeSubscriptions")
+    private List<Viewer> subscribers;
 }

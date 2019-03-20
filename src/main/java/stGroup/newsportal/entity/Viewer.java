@@ -4,11 +4,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.LinkedList;
 
 @Setter
 @Getter
@@ -21,8 +19,18 @@ public class Viewer {
     private String password;
     private LocalDate signupDate;
     @ManyToMany
-    private List<Author> authorSubscriptions;
+    @JoinTable(
+            name = "author_subscribtions",
+            joinColumns = @JoinColumn(name = "viewer"),
+            inverseJoinColumns = @JoinColumn(name = "author")
+    )
+    private LinkedList<Author> authorSubscriptions;
     @ManyToMany
-    private List<Theme> themeSubscriptions;
+    @JoinTable(
+            name = "theme_subscriptions",
+            joinColumns = @JoinColumn(name="viewer"),
+            inverseJoinColumns = @JoinColumn(name = "theme")
+    )
+    private LinkedList<Theme> themeSubscriptions;
 
 }
