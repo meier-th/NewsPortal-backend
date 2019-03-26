@@ -15,10 +15,4 @@ public class NewsPortalApplication {
 		SpringApplication.run(NewsPortalApplication.class, args);
 	}
 
-	@Bean
-	@ConfigurationProperties(prefix = "app.datasource")
-	public DataSource dataSource () {
-		return DataSourceBuilder.create().build();
-	}
-
 }

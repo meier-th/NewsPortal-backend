@@ -8,6 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -28,7 +29,7 @@ public class Article implements Serializable {
     @JoinColumn(name = "theme")
     private Theme theme;
     @OneToMany(mappedBy = "article")
-    private ArrayList<Comment> comments;
+    private List<Comment> comments;
     private int views;
     private int upVotes;
     private int downVotes;

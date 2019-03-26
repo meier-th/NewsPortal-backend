@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -21,9 +22,9 @@ public class Author implements Serializable {
     private String password;
     private LocalDate signupDate;
     @ManyToMany(mappedBy = "authorSubscriptions")
-    private LinkedList<Viewer> subscribers;
+    private List<Viewer> subscribers;
     @OneToMany(mappedBy = "author")
-    private ArrayList<Article> articles;
+    private List<Article> articles;
     private int rating;
 
 }

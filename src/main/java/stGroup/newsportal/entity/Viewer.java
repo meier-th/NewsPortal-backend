@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.LinkedList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 @Table(name = "viewer")
 public class Viewer implements Serializable {
 
+    @Id
     private String login;
     private String password;
     private LocalDate signupDate;
@@ -25,13 +26,13 @@ public class Viewer implements Serializable {
             joinColumns = @JoinColumn(name = "viewer"),
             inverseJoinColumns = @JoinColumn(name = "author")
     )
-    private LinkedList<Author> authorSubscriptions;
+    private List<Author> authorSubscriptions;
     @ManyToMany
     @JoinTable(
             name = "theme_subscriptions",
             joinColumns = @JoinColumn(name="viewer"),
             inverseJoinColumns = @JoinColumn(name = "theme")
     )
-    private LinkedList<Theme> themeSubscriptions;
+    private List<Theme> themeSubscriptions;
 
 }
