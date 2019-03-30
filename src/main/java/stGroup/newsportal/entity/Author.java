@@ -1,5 +1,7 @@
 package stGroup.newsportal.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,8 +9,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 @Getter
@@ -19,6 +19,7 @@ import java.util.List;
 public class Author implements Serializable {
     @Id
     private String login;
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String password;
     private LocalDate signupDate;
     @ManyToMany(mappedBy = "authorSubscriptions")

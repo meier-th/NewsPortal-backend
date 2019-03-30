@@ -7,7 +7,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -24,6 +23,7 @@ public class Article implements Serializable {
     @ManyToOne
     @JoinColumn(name = "author")
     private Author author;
+    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime dateTime;
     @ManyToOne
     @JoinColumn(name = "theme")
