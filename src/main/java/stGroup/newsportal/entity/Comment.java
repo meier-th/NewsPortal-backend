@@ -16,7 +16,7 @@ public class Comment implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
     private String text;
     @ManyToOne
     @JoinColumn(name = "article")
