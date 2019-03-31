@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 
 @Setter
 @Getter
@@ -26,5 +27,7 @@ public class Comment implements Serializable {
     private Viewer author;
     private int upVotes;
     private int downVotes;
+    @Temporal(value = TemporalType.TIMESTAMP)
+    private Date date;
 
 }

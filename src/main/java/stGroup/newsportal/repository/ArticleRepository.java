@@ -1,14 +1,16 @@
 package stGroup.newsportal.repository;
 
-import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import stGroup.newsportal.entity.Article;
 import stGroup.newsportal.entity.Author;
 import stGroup.newsportal.entity.Theme;
+
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -25,5 +27,13 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, L
 
     @Query("select a from Article a order by a.views DESC")
     List<Article> getMostViewed(Pageable pageable);
+
+    @Transactional
+    default void deleteOutdatedArticles(Date expiryDate) {
+        findAll().forEach(article -> {
+            if (!article.isImportant() && article.getDateTime().compareTo(expiryDate) <= 0)
+                delete(article);
+        });
+    }
 
 }

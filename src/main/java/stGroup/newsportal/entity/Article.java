@@ -6,7 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -24,7 +24,7 @@ public class Article implements Serializable {
     @JoinColumn(name = "author")
     private Author author;
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime dateTime;
+    private Date dateTime;
     @ManyToOne
     @JoinColumn(name = "theme")
     private Theme theme;
@@ -33,5 +33,6 @@ public class Article implements Serializable {
     private int views;
     private int upVotes;
     private int downVotes;
+    private boolean important;
 
 }

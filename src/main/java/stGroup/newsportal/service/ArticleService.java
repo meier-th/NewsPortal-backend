@@ -8,6 +8,9 @@ import stGroup.newsportal.entity.Article;
 import stGroup.newsportal.entity.Author;
 import stGroup.newsportal.entity.Theme;
 import stGroup.newsportal.repository.ArticleRepository;
+
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -46,6 +49,13 @@ public class ArticleService {
         Pageable pageNeeded = PageRequest.of(pageNum, number);
         List<Article> list = repository.getMostViewed(pageNeeded);
         return list;
+    }
+
+    public void wipeOldArticles () {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1);
+        Date expiryDate = calendar.getTime();
+        repository.deleteOutdatedArticles(expiryDate);
     }
 
 }
