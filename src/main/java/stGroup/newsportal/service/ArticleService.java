@@ -51,6 +51,12 @@ public class ArticleService {
         return list;
     }
 
+    public List<Article> getNew(int pageNum, int number) {
+        Pageable pageNeeded = PageRequest.of(pageNum, number);
+        List<Article> list = repository.findAll(pageNeeded).getContent();
+        return list;
+    }
+
     public void wipeOldArticles () {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.YEAR, -1);
