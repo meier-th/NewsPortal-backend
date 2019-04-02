@@ -3,13 +3,14 @@ package stGroup.newsportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import stGroup.newsportal.entity.Comment;
 import stGroup.newsportal.service.ArticleService;
-import stGroup.newsportal.service.AuthorService;
+import stGroup.newsportal.service.UserService;
+import stGroup.newsportal.service.CommentService;
 import stGroup.newsportal.service.ThemeService;
+
+import javax.persistence.EntityNotFoundException;
 
 @RestController
 public class ViewerController {
@@ -19,7 +20,9 @@ public class ViewerController {
     @Autowired
     private ThemeService themeService;
     @Autowired
-    private AuthorService authorService;
+    private UserService userService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping(value = "/new", produces = "application/json")
     public ResponseEntity<?> getNewArticles(@RequestParam int pages, @RequestParam int number) {
@@ -60,9 +63,29 @@ public class ViewerController {
     @GetMapping(value= "/{author}", produces = "application/json")
     public ResponseEntity<?> getByAuthor(@PathVariable String author, int pages, int number) {
         try {
-            return ResponseEntity.ok(articleService.getByAuthor(authorService.getAuthor(author), pages, number));
+            return ResponseEntity.ok(articleService.getByAuthor(userService.getAuthor(author), pages, number));
         } catch (Throwable error) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error.getMessage());
+        }
+    }
+
+    @PostMapping(value = "/comment", produces = "application/json")
+    public ResponseEntity<?> writeComment(@RequestBody Comment comment) {
+        try {
+            commentService.addComment(comment);
+            return ResponseEntity.ok().build();
+        } catch (Throwable error) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error.getMessage());
+        }
+    }
+
+    @GetMapping(value = "/upVote", produces = "application/json")
+    public ResponseEntity<?> upVoteArticle(@RequestParam long articleId) {
+        try {
+            articleService.upVoteArticle(articleId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
         }
     }
 

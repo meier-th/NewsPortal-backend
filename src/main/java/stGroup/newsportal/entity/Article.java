@@ -21,8 +21,8 @@ public class Article implements Serializable {
     private long id;
     private String text;
     @ManyToOne
-    @JoinColumn(name = "author")
-    private Author author;
+    @JoinColumn(name = "user")
+    private User user;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
     @ManyToOne

@@ -7,7 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import stGroup.newsportal.entity.Article;
-import stGroup.newsportal.entity.Author;
+import stGroup.newsportal.entity.User;
 import stGroup.newsportal.entity.Theme;
 
 import java.util.Date;
@@ -17,7 +17,7 @@ import java.util.List;
 public interface ArticleRepository extends PagingAndSortingRepository<Article, Long> {
 
     @Query("select a from Article a where a.author = :author order by a.dateTime")
-    List<Article> getByAuthor(@Param("author") Author author, Pageable pageable);
+    List<Article> getByAuthor(@Param("user") User user, Pageable pageable);
 
     @Query("select a from Article a where a.theme = :theme order by a.dateTime")
     List<Article> getByTheme(@Param("theme") Theme theme, Pageable pageable);

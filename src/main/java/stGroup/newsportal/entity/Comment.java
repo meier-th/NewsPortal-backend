@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Setter
 @Getter
@@ -23,8 +24,8 @@ public class Comment implements Serializable {
     @JoinColumn(name = "article")
     private Article article;
     @ManyToOne
-    @JoinColumn(name = "author")
-    private Viewer author;
+    @JoinColumn(name = "user")
+    private User author;
     private int upVotes;
     private int downVotes;
     @Temporal(value = TemporalType.TIMESTAMP)

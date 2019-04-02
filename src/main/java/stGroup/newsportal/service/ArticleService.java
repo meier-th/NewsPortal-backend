@@ -5,10 +5,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import stGroup.newsportal.entity.Article;
-import stGroup.newsportal.entity.Author;
+import stGroup.newsportal.entity.User;
 import stGroup.newsportal.entity.Theme;
 import stGroup.newsportal.repository.ArticleRepository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -27,9 +28,9 @@ public class ArticleService {
         repository.deleteById(id);
     }
 
-    public List<Article> getByAuthor(Author author, int pageNum, int number) {
+    public List<Article> getByAuthor(User user, int pageNum, int number) {
         Pageable pageNeeded = PageRequest.of(pageNum, number);
-        List<Article> list = repository.getByAuthor(author, pageNeeded);
+        List<Article> list = repository.getByAuthor(user, pageNeeded);
         return list;
     }
 
@@ -62,6 +63,36 @@ public class ArticleService {
         calendar.add(Calendar.YEAR, -1);
         Date expiryDate = calendar.getTime();
         repository.deleteOutdatedArticles(expiryDate);
+    }
+
+    public void upVoteArticle (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            throw new EntityNotFoundException();
+        } else {
+            article.setUpVotes(article.getUpVotes()+1);
+            repository.save(article);
+        }
+    }
+
+    public void downVoteArticle (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            throw new EntityNotFoundException();
+        } else {
+            article.setDownVotes(article.getDownVotes()+1);
+            repository.save(article);
+        }
+    }
+
+    public void viewArticle (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            throw new EntityNotFoundException();
+        } else {
+            article.setViews(article.getViews()+1);
+            repository.save(article);
+        }
     }
 
 }

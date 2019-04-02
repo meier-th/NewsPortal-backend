@@ -29,4 +29,16 @@ public class CommentService {
         repository.deleteById(id);
     }
 
+    public void upVoteComment (Long id) {
+        Comment comment = repository.findById(id).get();
+        comment.setUpVotes(comment.getUpVotes()+1);
+        repository.save(comment);
+    }
+
+    public void downVoteComment (Long id) {
+        Comment comment = repository.findById(id).get();
+        comment.setDownVotes(comment.getDownVotes()+1);
+        repository.save(comment);
+    }
+
 }

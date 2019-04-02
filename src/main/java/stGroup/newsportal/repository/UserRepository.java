@@ -2,8 +2,8 @@ package stGroup.newsportal.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import stGroup.newsportal.entity.Viewer;
+import stGroup.newsportal.entity.User;
 
 @Repository
-public interface ViewerRepository extends CrudRepository<Viewer, String> {
+public interface UserRepository extends CrudRepository<User, String> {
 }
