@@ -95,4 +95,24 @@ public class ArticleService {
         }
     }
 
+    public void disDownVote (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            throw new EntityNotFoundException();
+        } else {
+            article.setDownVotes(article.getDownVotes()-1);
+            repository.save(article);
+        }
+    }
+
+    public void disUpVote (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        if (article == null) {
+            throw new EntityNotFoundException();
+        } else {
+            article.setUpVotes(article.getUpVotes()-1);
+            repository.save(article);
+        }
+    }
+
 }

@@ -15,9 +15,9 @@ public class UserService {
     @Autowired
     private UserRepository repository;
 
-    public User getAuthor (String login) {
-        Optional<User> author = repository.findById(login);
-        return author.orElse(null);
+    public User getUser (String login) {
+        Optional<User> user = repository.findById(login);
+        return user.orElse(null);
     }
 
     public void updateAuthor (User user) {

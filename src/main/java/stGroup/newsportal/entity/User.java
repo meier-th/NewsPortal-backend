@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,41 +43,21 @@ public class User implements Serializable {
 
     private int rating;
 
-    @ManyToMany
-    @JoinTable(
-            name = "upvote_article",
-            joinColumns = @JoinColumn(name = "upvoted_article"),
-            inverseJoinColumns = @JoinColumn(name = "user")
-    )
     @JsonProperty(access = Access.WRITE_ONLY)
-    private List<Article> upVotedArticles;
+    @ElementCollection
+    private Set<Long> upVotedArticles;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToMany
-    @JoinTable(
-            name = "downvote_article",
-            joinColumns = @JoinColumn(name = "downvoted_article"),
-            inverseJoinColumns = @JoinColumn(name = "user")
-    )
-    private List<Article> downVotedArticles;
+    @ElementCollection
+    private Set<Long> downVotedArticles;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToMany
-    @JoinTable(
-            name = "upvote_comment",
-            joinColumns = @JoinColumn(name = "upvoted_comment"),
-            inverseJoinColumns = @JoinColumn(name = "user")
-    )
-    private List<Comment> upVotedComments;
+    @ElementCollection
+    private Set<Long> upVotedComments;
 
     @JsonProperty(access = Access.WRITE_ONLY)
-    @ManyToMany
-    @JoinTable(
-            name = "downvote_comment",
-            joinColumns = @JoinColumn(name = "downvoted_comment"),
-            inverseJoinColumns = @JoinColumn(name = "user")
-    )
-    private List<Comment> downVotedComments;
+    @ElementCollection
+    private Set<Long> downVotedComments;
 
     @ManyToMany
     @JoinTable(

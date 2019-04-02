@@ -3,8 +3,10 @@ package stGroup.newsportal.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import stGroup.newsportal.entity.Comment;
+import stGroup.newsportal.entity.User;
 import stGroup.newsportal.service.ArticleService;
 import stGroup.newsportal.service.UserService;
 import stGroup.newsportal.service.CommentService;
@@ -63,7 +65,7 @@ public class ViewerController {
     @GetMapping(value= "/{author}", produces = "application/json")
     public ResponseEntity<?> getByAuthor(@PathVariable String author, int pages, int number) {
         try {
-            return ResponseEntity.ok(articleService.getByAuthor(userService.getAuthor(author), pages, number));
+            return ResponseEntity.ok(articleService.getByAuthor(userService.getUser(author), pages, number));
         } catch (Throwable error) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error.getMessage());
         }
@@ -82,6 +84,34 @@ public class ViewerController {
     @GetMapping(value = "/upVote", produces = "application/json")
     public ResponseEntity<?> upVoteArticle(@RequestParam long articleId) {
         try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getUpVotedArticles().contains(articleId)) {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("The Article is already upvoted");
+            }
+            if (user.getDownVotedArticles().contains(articleId)) {
+                user.getDownVotedArticles().remove(articleId);
+                articleService.disDownVote(articleId);
+            }
+            user.getUpVotedArticles().add(articleId);
+            articleService.upVoteArticle(articleId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/downVote", produces = "application/json")
+    public ResponseEntity<?> downVoteArticle(@RequestParam long articleId) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getDownVotedArticles().contains(articleId)) {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("The article is already downvoted");
+            }
+            if (user.getUpVotedArticles().contains(articleId)) {
+                user.getUpVotedArticles().remove(articleId);
+                articleService.disUpVote(articleId);
+            }
+            user.getDownVotedArticles().add(articleId);
             articleService.upVoteArticle(articleId);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException error) {
