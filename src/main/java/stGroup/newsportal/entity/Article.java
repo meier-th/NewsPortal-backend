@@ -22,7 +22,7 @@ public class Article implements Serializable {
     private String text;
     @ManyToOne
     @JoinColumn(name = "user")
-    private User user;
+    private User author;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;
     @ManyToOne

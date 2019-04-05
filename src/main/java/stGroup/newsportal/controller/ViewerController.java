@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import stGroup.newsportal.entity.Article;
 import stGroup.newsportal.entity.Comment;
 import stGroup.newsportal.entity.User;
 import stGroup.newsportal.service.ArticleService;
@@ -113,6 +114,54 @@ public class ViewerController {
             }
             user.getDownVotedArticles().add(articleId);
             articleService.upVoteArticle(articleId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/view", produces = "application/json")
+    public ResponseEntity<?> viewArticle(@RequestParam long articleId) {
+        try {
+            articleService.viewArticle(articleId);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/upVoteComment", produces = "application/json")
+    public ResponseEntity<?> upVoteComment (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getUpVotedComments().contains(id))
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("The comment is already upvoted");
+            if (user.getDownVotedComments().contains(id)) {
+                user.getDownVotedComments().remove(id);
+                commentService.disDownVoteComment(id);
+            }
+            commentService.upVoteComment(id);
+            user.getUpVotedComments().add(id);
+            userService.updateAuthor(user);
+            return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/downVoteComment", produces = "application/json")
+    public ResponseEntity<?> downVoteComment (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getDownVotedComments().contains(id))
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("The comment is already downvoted");
+            if (user.getUpVotedComments().contains(id)) {
+                user.getUpVotedComments().remove(id);
+                commentService.disUpVoteComment(id);
+            }
+            commentService.downVoteComment(id);
+            user.getDownVotedComments().add(id);
+            userService.updateAuthor(user);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException error) {
             return ResponseEntity.notFound().build();

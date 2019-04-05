@@ -32,13 +32,13 @@ public class User implements Serializable {
 
     @ManyToMany
     @JoinTable(
-            name = "author_subscribtions",
+            name = "author_subscriptions",
             joinColumns = @JoinColumn(name = "subscriber"),
             inverseJoinColumns = @JoinColumn(name = "author")
     )
     private List<User> userSubscriptions;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "author")
     private List<Article> articles;
 
     private int rating;

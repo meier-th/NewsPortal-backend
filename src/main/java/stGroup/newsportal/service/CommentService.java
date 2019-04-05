@@ -41,4 +41,16 @@ public class CommentService {
         repository.save(comment);
     }
 
+    public void disDownVoteComment (Long id) {
+        Comment comment = repository.findById(id).get();
+        comment.setDownVotes(comment.getDownVotes()-1);
+        repository.save(comment);
+    }
+
+    public void disUpVoteComment (Long id) {
+        Comment comment = repository.findById(id).get();
+        comment.setUpVotes(comment.getUpVotes()-1);
+        repository.save(comment);
+    }
+
 }

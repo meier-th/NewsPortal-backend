@@ -16,7 +16,7 @@ import java.util.List;
 @Repository
 public interface ArticleRepository extends PagingAndSortingRepository<Article, Long> {
 
-    @Query("select a from Article a where a.author = :author order by a.dateTime")
+    @Query("select a from Article a where a.author = :user order by a.dateTime")
     List<Article> getByAuthor(@Param("user") User user, Pageable pageable);
 
     @Query("select a from Article a where a.theme = :theme order by a.dateTime")
