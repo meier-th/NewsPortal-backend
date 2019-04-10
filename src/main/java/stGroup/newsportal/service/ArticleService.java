@@ -115,4 +115,9 @@ public class ArticleService {
         }
     }
 
+    public Article getById (Long id) {
+        Article article = repository.findById(id).orElse(null);
+        return article;
+    }
+
 }

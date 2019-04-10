@@ -27,7 +27,7 @@ public class ViewerController {
     @Autowired
     private CommentService commentService;
 
-    @GetMapping(value = "/new", produces = "application/json")
+    @GetMapping(value = "/articles/new", produces = "application/json")
     public ResponseEntity<?> getNewArticles(@RequestParam int pages, @RequestParam int number) {
             try {
                 return ResponseEntity.ok(articleService.getNew(pages, number));
@@ -36,7 +36,7 @@ public class ViewerController {
             }
     }
 
-    @GetMapping(value = "/popular", produces = "application/json")
+    @GetMapping(value = "/articles/popular", produces = "application/json")
     public ResponseEntity<?> getPopularArticles(@RequestParam int pages, @RequestParam int number) {
         try {
             return ResponseEntity.ok(articleService.getByViews(pages, number));
@@ -45,7 +45,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/upVoted", produces = "application/json")
+    @GetMapping(value = "/articles/upVoted", produces = "application/json")
     public ResponseEntity<?> getMostUpVotedArticles(@RequestParam int pages, @RequestParam int number) {
         try {
             return ResponseEntity.ok(articleService.getByVotes(pages, number));
@@ -54,7 +54,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/{theme}", produces = "application/json")
+    @GetMapping(value = "/articles/{theme}", produces = "application/json")
     public ResponseEntity<?> getByTheme(@PathVariable String theme, @RequestParam int pages, @RequestParam int number) {
         try {
             return ResponseEntity.ok(articleService.getByTheme(themeService.getThemeByName(theme), pages, number));
@@ -63,7 +63,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value= "/{author}", produces = "application/json")
+    @GetMapping(value= "/articles/{author}", produces = "application/json")
     public ResponseEntity<?> getByAuthor(@PathVariable String author, int pages, int number) {
         try {
             return ResponseEntity.ok(articleService.getByAuthor(userService.getUser(author), pages, number));
@@ -82,7 +82,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/upVote", produces = "application/json")
+    @GetMapping(value = "/upvote/article", produces = "application/json")
     public ResponseEntity<?> upVoteArticle(@RequestParam long articleId) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -101,7 +101,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/downVote", produces = "application/json")
+    @GetMapping(value = "/downvote/article", produces = "application/json")
     public ResponseEntity<?> downVoteArticle(@RequestParam long articleId) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -130,7 +130,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/upVoteComment", produces = "application/json")
+    @GetMapping(value = "/upvote/comment", produces = "application/json")
     public ResponseEntity<?> upVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -149,7 +149,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/downVoteComment", produces = "application/json")
+    @GetMapping(value = "/downvote/comment", produces = "application/json")
     public ResponseEntity<?> downVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -157,12 +157,79 @@ public class ViewerController {
                 return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("The comment is already downvoted");
             if (user.getUpVotedComments().contains(id)) {
                 user.getUpVotedComments().remove(id);
+                userService.updateAuthor(user);
                 commentService.disUpVoteComment(id);
             }
             commentService.downVoteComment(id);
             user.getDownVotedComments().add(id);
             userService.updateAuthor(user);
             return ResponseEntity.ok().build();
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/disdownvote/article", produces = "application/json")
+    public ResponseEntity<?> disDownVoteArticle (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getDownVotedArticles().contains(id)) {
+                user.getDownVotedArticles().remove(id);
+                userService.updateAuthor(user);
+                articleService.disDownVote(id);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("This article was not downvoted");
+            }
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/disupvote/article", produces = "application/json")
+    public ResponseEntity<?> disUpVoteArticle (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getUpVotedArticles().contains(id)) {
+                user.getUpVotedArticles().remove(id);
+                userService.updateAuthor(user);
+                articleService.disUpVote(id);
+                return ResponseEntity.ok().build();
+            } else {
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("This article was not upvoted");
+            }
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/disdownvote/comment", produces = "application/json")
+    public ResponseEntity<?> disDownVoteComment (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getDownVotedComments().contains(id)) {
+                user.getDownVotedComments().remove(id);
+                userService.updateAuthor(user);
+                commentService.disDownVoteComment(id);
+                return ResponseEntity.ok().build();
+            } else
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body("This comment was not downvoted");
+        } catch (EntityNotFoundException error) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping(value = "/disupvote/comment", produces = "application/json")
+    public ResponseEntity<?> disUpVoteComment (@RequestParam long id) {
+        try {
+            User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+            if (user.getUpVotedArticles().contains(id)) {
+                user.getUpVotedArticles().remove(id);
+                userService.updateAuthor(user);
+                commentService.disUpVoteComment(id);
+                return ResponseEntity.ok().build();
+            } else
+                return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).build();
         } catch (EntityNotFoundException error) {
             return ResponseEntity.notFound().build();
         }
