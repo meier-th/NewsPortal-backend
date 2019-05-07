@@ -1,11 +1,14 @@
 package stGroup.newsportal.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
 import javax.sql.DataSource;
 
@@ -16,34 +19,36 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     LoginSuccessHandler loginHandler;
 
+    @Autowired
+    private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
     @Override
-    protected void configure (HttpSecurity http) {
-        try {
-            http.authorizeRequests().antMatchers("/", "/home").permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .formLogin()
-                    .successHandler(loginHandler)
-                    .and()
-                    .logout().deleteCookies("JSESSIONID").logoutSuccessUrl("/");
-        } catch (Exception error) {
-            System.out.println("Security initialization error has occurred:");
-            System.out.println(error.getMessage());
-            error.printStackTrace();
-            System.exit(1);
-        }
+    protected void configure (HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .exceptionHandling()
+                .authenticationEntryPoint(restAuthenticationEntryPoint)
+                .and()
+                .authorizeRequests()
+                .antMatchers("/checkCookies").permitAll()
+                .antMatchers("/registration").permitAll()
+                .anyRequest().authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
+                .antMatchers("/").permitAll()
+                .and()
+                .formLogin()
+                .successHandler(loginHandler)
+                .and()
+                .logout().deleteCookies("JSESSIONID").logoutSuccessUrl("/logout-success");
     }
 
-    @Autowired
-    public void initialize(AuthenticationManagerBuilder builder, DataSource dataSource) {
-        try {
-            builder.jdbcAuthentication().dataSource(dataSource);
-        } catch (Exception error) {
-            System.out.println("AuthenticationManager initialization has thrown an exception:");
-            System.out.println(error.getMessage());
-            error.printStackTrace();
-            System.exit(1);
-        }
+    @Override
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication();
+    }
+
+    @Bean
+    public BCryptPasswordEncoder getPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }
