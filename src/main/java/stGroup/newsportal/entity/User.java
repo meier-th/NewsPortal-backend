@@ -14,12 +14,11 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
 @Table(name = "authors")
 public class User implements Serializable {
-    @Id
 
+    @Id
     private String login;
 
     @JsonProperty(access = Access.WRITE_ONLY)
@@ -27,8 +26,16 @@ public class User implements Serializable {
 
     private LocalDate signupDate;
 
+    private boolean enabled;
+
     @ManyToMany(mappedBy = "userSubscriptions")
     private List<User> subscribers;
+
+    private String email;
+
+    @ManyToOne
+    @JoinColumn
+    private Role role;
 
     @ManyToMany
     @JoinTable(
@@ -66,5 +73,10 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "theme")
     )
     private List<Theme> themeSubscriptions;
+
+    public User() {
+        super();
+        this.enabled = false;
+    }
 
 }

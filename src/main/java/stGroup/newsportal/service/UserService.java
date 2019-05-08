@@ -3,6 +3,7 @@ package stGroup.newsportal.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import stGroup.newsportal.entity.Role;
 import stGroup.newsportal.entity.User;
 import stGroup.newsportal.repository.UserRepository;
 
@@ -42,6 +43,9 @@ public class UserService {
             User user = new User();
             user.setLogin(username);
             user.setSignupDate(LocalDate.now());
+            Role role = new Role();
+            role.setName("USER");
+            user.setRole(role);
             user.setPassword(passwordEncoder.encode(password));
             repository.save(user);
         }
