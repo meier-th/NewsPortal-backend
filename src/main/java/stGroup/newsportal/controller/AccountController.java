@@ -1,6 +1,7 @@
 package stGroup.newsportal.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,9 @@ public class AccountController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @PostMapping(value = "/registration", produces = "application/json")
     public ResponseEntity<?> signUp(@RequestBody CredentialsDTO dto) {

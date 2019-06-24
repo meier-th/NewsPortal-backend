@@ -10,14 +10,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
-import javax.sql.DataSource;
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    LoginSuccessHandler loginHandler;
+    private LoginSuccessHandler loginHandler;
+
+    @Autowired
+    private HttpStatusReturningLogoutSuccessHandler restLogoutHandler;
 
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
@@ -29,16 +30,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/checkCookies").permitAll()
-                .antMatchers("/registration").permitAll()
-                .anyRequest().authenticated()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/").permitAll()
+                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/logged/**").authenticated()
+                    .anyRequest().permitAll()
                 .and()
-                .formLogin()
-                .successHandler(loginHandler)
+                    .formLogin()
+                    .successHandler(loginHandler)
                 .and()
-                .logout().deleteCookies("JSESSIONID").logoutSuccessUrl("/logout-success");
+                    .logout().logoutSuccessHandler(restLogoutHandler);
     }
 
     @Override
@@ -49,6 +48,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public BCryptPasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    protected HttpStatusReturningLogoutSuccessHandler restLogoutHandler(){
+        return new HttpStatusReturningLogoutSuccessHandler();
     }
 
 }

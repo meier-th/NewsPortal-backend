@@ -72,7 +72,7 @@ public class ViewerController {
         }
     }
 
-    @PostMapping(value = "/comment", produces = "application/json")
+    @PostMapping(value = "/logged/comment", produces = "application/json")
     public ResponseEntity<?> writeComment(@RequestBody Comment comment) {
         try {
             commentService.addComment(comment);
@@ -82,7 +82,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/upvote/article", produces = "application/json")
+    @GetMapping(value = "/logged/upvote/article", produces = "application/json")
     public ResponseEntity<?> upVoteArticle(@RequestParam long articleId) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -101,7 +101,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/downvote/article", produces = "application/json")
+    @GetMapping(value = "/logged/downvote/article", produces = "application/json")
     public ResponseEntity<?> downVoteArticle(@RequestParam long articleId) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -130,7 +130,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/upvote/comment", produces = "application/json")
+    @GetMapping(value = "/logged/upvote/comment", produces = "application/json")
     public ResponseEntity<?> upVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -149,7 +149,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/downvote/comment", produces = "application/json")
+    @GetMapping(value = "/logged/downvote/comment", produces = "application/json")
     public ResponseEntity<?> downVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -169,7 +169,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/disdownvote/article", produces = "application/json")
+    @GetMapping(value = "/logged/disdownvote/article", produces = "application/json")
     public ResponseEntity<?> disDownVoteArticle (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -186,7 +186,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/disupvote/article", produces = "application/json")
+    @GetMapping(value = "/logged/disupvote/article", produces = "application/json")
     public ResponseEntity<?> disUpVoteArticle (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -203,7 +203,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/disdownvote/comment", produces = "application/json")
+    @GetMapping(value = "/logged/disdownvote/comment", produces = "application/json")
     public ResponseEntity<?> disDownVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -219,7 +219,7 @@ public class ViewerController {
         }
     }
 
-    @GetMapping(value = "/disupvote/comment", produces = "application/json")
+    @GetMapping(value = "/logged/disupvote/comment", produces = "application/json")
     public ResponseEntity<?> disUpVoteComment (@RequestParam long id) {
         try {
             User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());

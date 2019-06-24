@@ -22,7 +22,7 @@ public class AuthorController {
     private CommentService commentService;
 
 
-    @PostMapping(value = "/create/article", produces = "application/json")
+    @PostMapping(value = "/logged/create/article", produces = "application/json")
     public ResponseEntity<?> createArticle(@RequestBody Article article, @RequestParam boolean update) {
         try {
             User author = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -38,7 +38,7 @@ public class AuthorController {
         }
     }
 
-    @DeleteMapping(value = "/delete/article", produces = "application/json")
+    @DeleteMapping(value = "/logged/delete/article", produces = "application/json")
     public ResponseEntity<?> deleteArticle(@RequestParam long id) {
         try {
             User author = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
