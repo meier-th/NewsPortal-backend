@@ -54,7 +54,7 @@ public class ArticleService {
 
     public List<Article> getNew(int pageNum, int number) {
         Pageable pageNeeded = PageRequest.of(pageNum, number);
-        List<Article> list = repository.findAll(pageNeeded).getContent();
+        List<Article> list = repository.getArticlesOrderByDateTime(pageNeeded);
         return list;
     }
 
