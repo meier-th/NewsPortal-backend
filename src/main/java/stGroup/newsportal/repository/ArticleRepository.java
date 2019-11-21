@@ -28,7 +28,7 @@ public interface ArticleRepository extends PagingAndSortingRepository<Article, L
     @Query("select a from Article a order by a.views DESC")
     List<Article> getMostViewed(Pageable pageable);
 
-    List<Article> getArticlesOrderByDateTimeDesc(Pageable pageable);
+    List<Article> getArticlesOrderByDateTime (Pageable pageable);
 
     @Transactional
     default void deleteOutdatedArticles(Date expiryDate) {

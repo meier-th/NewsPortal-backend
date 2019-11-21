@@ -25,7 +25,7 @@ public class AccountController {
             userService.createUser(dto.getUsername(), dto.getPassword());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (Exception error) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Username "+dto.getUsername()+" is already occupied!");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error.getMessage());
         }
     }
 

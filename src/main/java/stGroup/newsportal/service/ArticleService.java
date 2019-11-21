@@ -3,6 +3,7 @@ package stGroup.newsportal.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import stGroup.newsportal.entity.Article;
 import stGroup.newsportal.entity.User;
@@ -53,9 +54,10 @@ public class ArticleService {
     }
 
     public List<Article> getNew(int pageNum, int number) {
-        Pageable pageNeeded = PageRequest.of(pageNum, number);
+         return repository.findAll(PageRequest.of(pageNum, number, Sort.by("dateTime"))).getContent();
+                /*PageRequest.of(pageNum, number);
         List<Article> list = repository.getArticlesOrderByDateTime(pageNeeded);
-        return list;
+        return list;*/
     }
 
     public void wipeOldArticles () {
