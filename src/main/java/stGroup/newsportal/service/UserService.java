@@ -46,6 +46,7 @@ public class UserService {
             Role role = new Role();
             role.setName("USER");
             user.setRole(role);
+            user.setEnabled(true);
             user.setPassword(passwordEncoder.encode(password));
             repository.save(user);
         }

@@ -113,7 +113,7 @@ public class ViewerController {
                 articleService.disUpVote(articleId);
             }
             user.getDownVotedArticles().add(articleId);
-            articleService.upVoteArticle(articleId);
+            articleService.downVoteArticle(articleId);
             return ResponseEntity.ok().build();
         } catch (EntityNotFoundException error) {
             return ResponseEntity.notFound().build();

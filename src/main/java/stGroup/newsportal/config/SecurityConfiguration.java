@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
@@ -23,6 +25,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
     @Override
     protected void configure (HttpSecurity http) throws Exception {
@@ -44,17 +52,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication();
+        auth.jdbcAuthentication()
+        .usersByUsernameQuery("select login,password,enabled from authors where login=?")
+        .authoritiesByUsernameQuery("select login, role_name from authors where login=?")
+        .dataSource(dataSource)
+        .passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    public BCryptPasswordEncoder getPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
-    @Bean
-    protected HttpStatusReturningLogoutSuccessHandler restLogoutHandler(){
-        return new HttpStatusReturningLogoutSuccessHandler();
-    }
 
 }

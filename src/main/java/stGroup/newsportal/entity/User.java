@@ -28,6 +28,7 @@ public class User implements Serializable {
 
     private boolean enabled;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     @ManyToMany(mappedBy = "userSubscriptions")
     private List<User> subscribers;
 
@@ -37,6 +38,7 @@ public class User implements Serializable {
     @JoinColumn
     private Role role;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     @ManyToMany
     @JoinTable(
             name = "author_subscriptions",
@@ -45,6 +47,7 @@ public class User implements Serializable {
     )
     private List<User> userSubscriptions;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     @OneToMany(mappedBy = "author")
     private List<Article> articles;
 
@@ -66,6 +69,7 @@ public class User implements Serializable {
     @ElementCollection
     private Set<Long> downVotedComments;
 
+    @JsonProperty(access = Access.WRITE_ONLY)
     @ManyToMany
     @JoinTable(
             name = "theme_subscriptions",
