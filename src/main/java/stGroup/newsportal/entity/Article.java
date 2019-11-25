@@ -1,5 +1,7 @@
 package stGroup.newsportal.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,11 +19,13 @@ import java.util.List;
 public class Article implements Serializable {
 
     @Id
+    @JsonProperty(access = Access.READ_ONLY)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private String text;
+    private String heading;
     @ManyToOne
-    @JoinColumn(name = "user")
+    @JoinColumn(name = "author")
     private User author;
     @Temporal(TemporalType.TIMESTAMP)
     private Date dateTime;

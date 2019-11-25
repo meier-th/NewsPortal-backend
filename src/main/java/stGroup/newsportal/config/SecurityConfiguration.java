@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.sql.DataSource;
 
@@ -32,15 +33,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CorsConfigurationSource corsConfigurationSource;
+
     @Override
     protected void configure (HttpSecurity http) throws Exception {
-        http.csrf().disable()
+        http.csrf().disable().cors().configurationSource(corsConfigurationSource)
+                .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(restAuthenticationEntryPoint)
                 .and()
                 .authorizeRequests()
                     .antMatchers("/admin/**").hasRole("ADMIN")
-                    .antMatchers("/logged/**").authenticated()
+                    //.antMatchers("/logged/**").authenticated()
                     .anyRequest().permitAll()
                 .and()
                     .formLogin()
